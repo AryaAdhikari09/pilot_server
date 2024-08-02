@@ -2,15 +2,18 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const cors = require('cors');
 
 const app = express();
 app.use(express.json());
 
-const PORT = 3000;
-const JWT_SECRET = 'your_jwt_secret';
+const PORT = process.env.PORT || 3000; // Use PORT from environment variables or default to 3000
+const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret'; // Set this environment variable in Vercel
+
+app.use(cors({ origin: "*" }));
 
 // Connect to MongoDB Atlas
-const MONGODB_URI = 'mongodb+srv://shivkamp:goodevening@cluster0.mtuwxiq.mongodb.net/SampleCollection';
+const MONGODB_URI = process.env.MONGODB_URI || 'your_mongodb_uri'; // Set this environment variable in Vercel
 
 mongoose.connect(MONGODB_URI, {
     useNewUrlParser: true,
@@ -31,14 +34,6 @@ const userSchema = new mongoose.Schema({
 }, { collection: 'Userdata' });
 
 const User = mongoose.model('User', userSchema);
-
-// // New schema to accept user input
-// const userInputSchema = new mongoose.Schema({
-//     email: { type: String, required: true },
-//     inputData: { type: mongoose.Schema.Types.Mixed, required: true }
-// }, { collection: 'UserInputs' });
-
-// const UserInput = mongoose.model('UserInput', userInputSchema);
 
 // Middleware to verify JWT token
 const verifyToken = (req, res, next) => {
