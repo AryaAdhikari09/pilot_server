@@ -13,7 +13,7 @@ const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret'; // Set this envi
 app.use(cors({ origin: "*" }));
 
 // Connect to MongoDB Atlas
-const MONGODB_URI = process.env.MONGODB_URI || 'your_mongodb_uri'; // Set this environment variable in Vercel
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://shivkamp:goodevening@cluster0.mtuwxiq.mongodb.net/'; // Set this environment variable in Vercel
 
 mongoose.connect(MONGODB_URI, {
     useNewUrlParser: true,
