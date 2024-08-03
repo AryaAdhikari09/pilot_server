@@ -1,3 +1,5 @@
+// server.js
+
 const express = require('express');
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
@@ -15,13 +17,14 @@ app.use(cors({ origin: "*" }));
 // Connect to MongoDB Atlas
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://shivkamp:goodevening@cluster0.mtuwxiq.mongodb.net/'; // Set this environment variable in Vercel
 
-mongoose.connect(MONGODB_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-});
+mongoose.connect(MONGODB_URI);
 
 const db = mongoose.connection;
-db.on('error', console.error.bind(console, 'MongoDB connection error:'));
+db.on('error', (error) => {
+    console.error('MongoDB connection error:', error);
+    process.exit(1); // Exit the process with a failure code
+});
+
 db.once('open', () => {
     console.log('Connected to MongoDB');
 });
@@ -51,6 +54,11 @@ const verifyToken = (req, res, next) => {
         res.status(401).json({ message: 'Invalid token' });
     }
 };
+
+// Default route to handle base URL
+app.get('/', (req, res) => {
+    res.send('Welcome to the API!');
+});
 
 // Register API
 app.post('/register', async (req, res) => {
